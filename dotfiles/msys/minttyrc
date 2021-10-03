@@ -1,0 +1,9 @@
+ThemeFile=gruvbox-light.minttyrc
+Transparency=off
+Font=Iosevka Term Slab
+FontWeight=400
+FontHeight=13
+FontIsBold=no
+FontSmoothing=full
+Term=xterm-256color
+BellType=0

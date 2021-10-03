@@ -1,0 +1,22 @@
+# Pilonsi's tcsh .login
+
+# Sort of hacky way of setting PATH when using csh as a login shell in MSYS2
+# Placeholder until I rewrite MSYS' /etc/profile in csh syntax
+switch ($MSYSTEM)
+  case "MINGW64":
+    set path = ( /mingw64/bin /usr/local/bin /usr/bin /bin /c/Windows/System32 /c/Windows /c/Windows/System32/Wbem /c/Windows/System32/WindowsPowerShell/v1.0/ /usr/bin/site_perl /usr/bin/vendor_perl /usr/bin/core_perl )
+    breaksw
+  default:
+    exec "/usr/bin/bash -l"
+    breaksw
+endsw
+
+# Append the home bin folder to PATH
+set path = ( $path ~/.local/bin )
+
+# Set SHELL since MSYS2 doesn't
+setenv SHELL "/usr/bin/tcsh"
+
+# Rest of login settings
+source ~/.cshrc
+
