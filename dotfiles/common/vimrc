@@ -1,7 +1,6 @@
 " Basic settings
 syntax on
-colorscheme vacme
-set background=light
+colorscheme pencil
 hi CursorLine cterm=NONE ctermbg=8
 hi CursorLine cterm=NONE ctermbg=8
 set number
