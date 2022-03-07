@@ -1,5 +1,6 @@
 " Basic settings
 syntax on
+set background=dark
 colorscheme pencil
 hi CursorLine cterm=NONE ctermbg=8
 hi CursorLine cterm=NONE ctermbg=8
