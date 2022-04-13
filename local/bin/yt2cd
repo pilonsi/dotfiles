@@ -1,0 +1,26 @@
+#!/bin/sh
+
+mkdir tmp
+cd tmp
+yt-dlp --extract-audio \
+       --audio-format flac \
+       --audio-quality 0 \
+       --yes-playlist \
+       --output '%(epoch)s.%(ext)s' \
+       $1
+
+# Convert files to wav
+for i in $( ls ); do ffmpeg -i $i -ar 44100 $i.wav; done
+
+# Normalize audio
+normalize-audio -m *.wav
+
+# Burn the CD
+#wodim -v -fix -eject dev='/dev/scd0'
+#wodim -v -nofix -eject dev='/dev/scd0' -audio -pad *.wav
+wodim -v -eject dev='/dev/sr0' -audio -pad *.wav
+
+cd -
+rm -r tmp
+
+echo "Burn complete!"
