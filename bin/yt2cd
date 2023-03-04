@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Update yt-dlp
+python3 -m pip install -U yt-dlp
+
 mkdir tmp
 cd tmp
 yt-dlp --extract-audio \
