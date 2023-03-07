@@ -3,7 +3,7 @@
 
 if ($#argv != 1) then
 	echo "Error: You must give exactly 1 arguments"
-	echo "Usage: marker [red | green | yellow | blue | magenta | cyan | none | cheatsheet]"
+	echo "Usage: marker [red | green | yellow | blue | magenta | cyan | none ]"
 	echo " "
 else
 	switch ("$argv[1]")
@@ -34,16 +34,7 @@ else
 		case none :
 			set color="0;37m"			
 			breaksw
-    case cheatsheet:
-      echo "\e[1;31mRed:     \e[0mSimulations"
-      echo "\e[1;32mGreen:   \e[0mRTL Editing"
-      echo "\e[1;33mYellow:  \e[0mSynthesys / Spyglass"
-      echo "\e[1;34mBlue:    \e[0mGUI"
-      echo "\e[1;35mMagenta: \e[0mFPGA"
-      echo "\e[1;36mCyan:    \e[0mMisc"
-      echo "\e[0;37mNone:    \e[0mNo project initialized"
-      echo " "
-      exit
+
 		default :
 			echo "Error: Arguments not valid"
 			echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none | cheatsheet]"
