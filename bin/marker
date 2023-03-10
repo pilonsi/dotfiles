@@ -3,7 +3,7 @@
 
 if ($#argv != 1) then
 	echo "Error: You must give exactly 1 arguments"
-	echo "Usage: marker [red | green | yellow | blue | magenta | cyan | none ]"
+	echo "Usage: marker [red | green | yellow | blue | magenta | cyan | none]"
 	echo " "
 else
 	switch ("$argv[1]")
@@ -37,7 +37,7 @@ else
 
 		default :
 			echo "Error: Arguments not valid"
-			echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none | cheatsheet]"
+			echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none]"
 			echo " "
 			exit
 

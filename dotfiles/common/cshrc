@@ -8,15 +8,15 @@
 
 # Pilonsi's .cshrc file
 
-alias h		history 25
-alias hg  history | grep
-alias j		jobs -l
-alias la	ls -aF
-alias lf	ls -FA
-alias ll	ls -lAF
+alias h		'history 25'
+alias hg  'history | grep'
+alias j		'jobs -l'
+alias la	'ls -aF'
+alias lf	'ls -FA'
+alias ll	'ls -lAF'
 
 # Marker command
-alias marker source ~/bin/marker
+alias marker 'source ~/bin/marker'
 
 setenv	EDITOR	vim
 setenv	PAGER	less
@@ -24,6 +24,7 @@ setenv	PAGER	less
 if ($?prompt) then
 	# An interactive shell -- set some stuff up
 	set prompt = "%~ %# "
+  set promptchars = ">#"
 
 	set filec
 	set history = 1000
