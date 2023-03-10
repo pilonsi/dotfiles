@@ -1,19 +1,44 @@
-# pilonsi's .cshrc file
+# $FreeBSD$
+#
+# .cshrc - csh resource script, read at beginning of execution by each shell
+#
+# see also csh(1), environ(7).
+# more examples available at /usr/share/examples/csh/
+#
 
-# csh config
-# Enable tab autocompletion
-set autolist ambiguous
+# Pilonsi's .cshrc file
 
-# Aliases
-alias ll 'ls -l'
-alias hg 'history | grep'
-alias marker 'source ~/bin/marker'
+alias h		history 25
+alias hg  history | grep
+alias j		jobs -l
+alias la	ls -aF
+alias lf	ls -FA
+alias ll	ls -lAF
 
-# History
-set history=200
+# Marker command
+alias marker source ~/bin/marker
 
-# Prompt
-set prompt="%~ > "
+setenv	EDITOR	vim
+setenv	PAGER	less
+
+if ($?prompt) then
+	# An interactive shell -- set some stuff up
+	set prompt = "%~ %# "
+
+	set filec
+	set history = 1000
+	set savehist = (1000 merge)
+	set autolist = ambiguous
+	# Use history to aid expansion
+	set autoexpand
+	set autorehash
+	if ( $?tcsh ) then
+		bindkey "^W" backward-delete-word
+		bindkey -k up history-search-backward
+		bindkey -k down history-search-forward
+	endif
+
+endif
 
 # Load environment-specific settings
 source ~/.cshrc.env

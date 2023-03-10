@@ -43,7 +43,7 @@ else
 
 	endsw
   
-	set prompt="%~ %{\e[${color}%}>%{\e[0m%} "
+	set prompt="%~ %{\e[${color}%}%#%{\e[0m%} "
 	unset color
 
 endif
