@@ -8,6 +8,8 @@
 
 # Pilonsi's .cshrc file
 
+setenv PATH ${PATH}:${HOME}/bin
+
 alias h		'history 25'
 alias hg  'history | grep'
 alias j		'jobs -l'
