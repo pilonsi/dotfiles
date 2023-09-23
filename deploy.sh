@@ -1,12 +1,12 @@
 #!/bin/sh
 # Deploy dotfiles in a new system
 
-systems=("macos" "debian" "illumos" "freebsd" "msys")
+systems="macos debian illumos freebsd msys"
 
 parse_error() {
   printf "Usage: ${0} deploy | acquire <system> [-d]\n" 
   printf "Where system must be one of the following:\n"
-  for system in ${systems[@]}; do
+  for system in $systems; do
     printf "$system "
   done
   printf "\n\n"
@@ -25,7 +25,7 @@ if [ $# -lt 2 ]; then
   parse_error
 elif ! echo "deploy acquire" | grep -qw "$1"; then
   parse_error
-elif ! echo "${systems[*]}" | grep -qw "$2"; then
+elif ! echo "$systems" | grep -qw "$2"; then
   parse_error
 fi
 
@@ -44,11 +44,11 @@ wish to proceed? (y/n)\c"
   fi
 fi
 
-install_subdirs=("common" "$2")
+install_subdirs="common $2"
 
 cd $(dirname "$0")
 
-for subdir in ${install_subdirs[@]}; do
+for subdir in $install_subdirs; do
   dir="./dotfiles/${subdir}"
   ls -1 $dir | while read -r item; do
     if [ "$1" = "deploy" ]; then
