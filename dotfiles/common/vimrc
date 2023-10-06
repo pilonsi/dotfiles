@@ -17,7 +17,6 @@ set wildmenu
 
 set tabstop=2
 set softtabstop=2
-set expandtab
 
 " ADI Specific
 set t_BE=                      " Fixes issues with copy/paste
