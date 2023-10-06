@@ -18,6 +18,9 @@ set wildmenu
 set tabstop=2
 set softtabstop=2
 
+set mouse=
+set ttymouse=
+
 " ADI Specific
 set t_BE=                      " Fixes issues with copy/paste
 set backspace=indent,eol,start " Fixes issue with delete/backspace
