@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Update yt-dlp
+python3 -m pip install -U yt-dlp
+
+yt-dlp --extract-audio \
+       --audio-format wav \
+       --audio-quality 0 \
+       --yes-playlist \
+			 --output '%(title)s.%(ext)s'\
+       $1
+
+# Remove spaces from filename
+for f in *; do mv "$f" "$(echo $f | sed 's/ /_/g')"; done
+
+# Normalize audio
+normalize-audio -m *.wav
+
+# Convert files to AAC
+for i in $( ls ); do ffmpeg -i $i -c:a aac_at $i.m4a; done
+
+# Cleanup
+rm -r *.wav
+
+echo "Download complete!"
