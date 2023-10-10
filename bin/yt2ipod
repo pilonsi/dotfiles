@@ -10,14 +10,11 @@ yt-dlp --extract-audio \
 			 --output '%(title)s.%(ext)s'\
        $1
 
-# Remove spaces from filename
-for f in *; do mv "$f" "$(echo $f | sed 's/ /_/g')"; done
-
 # Normalize audio
 normalize-audio -m *.wav
 
 # Convert files to AAC
-for i in $( ls ); do ffmpeg -i $i -c:a aac_at $i.m4a; done
+for i in *.wav; do ffmpeg -i $i -c:a aac_at $i.m4a; done
 
 # Cleanup
 rm -r *.wav
