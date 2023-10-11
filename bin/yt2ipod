@@ -14,7 +14,7 @@ yt-dlp --extract-audio \
 normalize-audio -m *.wav
 
 # Convert files to AAC
-for i in *.wav; do ffmpeg -i $i -c:a aac_at $i.m4a; done
+for i in *.wav; do ffmpeg -i "$i" -c:a aac_at "$i.m4a"; done
 
 # Cleanup
 rm -r *.wav
