@@ -1,0 +1,5 @@
+directory: /Volumes/pilonsi/audio/music
+library: /Volumes/pilonsi/audio/beets/musiclibrary.db
+plugins: fetchart lastgenre embedart ftintitle
+embedart:
+  auto: yes
