@@ -7,7 +7,7 @@ yt-dlp --extract-audio \
        --audio-format wav \
        --audio-quality 0 \
        --yes-playlist \
-			 --output '%(title)s.%(ext)s'\
+			 --output '%(epoch)s-%(title)s.%(ext)s'\
        $1
 
 # Normalize audio
