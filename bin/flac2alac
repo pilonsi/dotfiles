@@ -15,7 +15,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # Convert FLAC files in selected directory to ALAC
-for i in *.flac; do ffmpeg -i "$i" -acodec alac -vcodec copy -sample_fmt s16p "$i.m4a"; done
+for i in *.flac; do 
+	if [ $(ffprobe "$i" -v error -select_streams a:0 -show_streams | grep sample_rate | cut -d= -f2) -gt 48000 ]; then
+		ffmpeg -i "$i" -acodec alac -ar 48000 -vcodec copy -sample_fmt s16p "$i.m4a"
+	else
+		ffmpeg -i "$i" -acodec alac -vcodec copy -sample_fmt s16p "$i.m4a"
+	fi
+done
 
 # Cleanup
 rm -r *.flac
