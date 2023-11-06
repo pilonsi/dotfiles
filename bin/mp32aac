@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Check supplied directory and change to it
+if [ $# -lt 1 ]; then
+	echo "Error: Not enough arguments. Must provide a directory name."
+	exit 1
+fi
+
+cd $1
+
+# Avoid potentially disastrous results if the cd fails
+if [ $? -ne 0 ]; then
+	echo "Error: could not change to provided directory. Stopping..."
+	exit 1
+fi
+
+# Convert FLAC files in selected directory to ALAC
+for i in *.mp3; do 
+	ffmpeg -i "$i" -acodec aac_at -vcodec copy -b:a 320K "$i.m4a"
+done
+
+# Cleanup
+rm -r *.mp3
+
+echo "Conversion complete!"
