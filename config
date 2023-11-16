@@ -1,7 +1,7 @@
 #!/bin/sh
 # Deploy dotfiles in a new system
 
-systems="macos debian illumos freebsd msys"
+systems="macos linux illumos freebsd msys"
 
 parse_error() {
   printf "Usage: ${0} deploy | acquire <system> [-d]\n" 
