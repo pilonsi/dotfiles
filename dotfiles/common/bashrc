@@ -1,0 +1,10 @@
+# Pilonsi's .bashrc file
+
+alias h='history 25'
+alias hg='history | grep'
+alias j='jobs -l'
+alias la='ls -aF'
+alias lf='ls -FA'
+alias ll='ls -lAF'
+
+export PS1="\e[3m\w >\e[0m "
