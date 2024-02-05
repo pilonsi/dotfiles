@@ -1,9 +1,18 @@
-" Basic settings
+" Pilonsi's .vimrc
+
+" Colors
 syntax on
 set background=dark
 colorscheme pencil
 hi CursorLine cterm=NONE ctermbg=8
 hi CursorLine cterm=NONE ctermbg=8
+
+" Formatting
+set tabstop=2
+set softtabstop=2
+set wrap!
+
+" UI
 set number
 set ruler
 set showcmd
@@ -11,13 +20,12 @@ set cursorline
 set showmatch
 set incsearch
 set hlsearch
-set wrap!
-
 set wildmenu
 
-set tabstop=2
-set softtabstop=2
+" File handling
+filetype plugin on
 
+" Disable annoying mouse controls
 set mouse=
 set ttymouse=
 
