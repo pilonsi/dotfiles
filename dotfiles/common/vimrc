@@ -3,9 +3,10 @@
 " Colors
 syntax on
 set background=dark
+set colorcolumn=80
 colorscheme pencil
 hi CursorLine cterm=NONE ctermbg=8
-hi CursorLine cterm=NONE ctermbg=8
+hi ColorColumn cterm=NONE ctermbg=8
 
 " Formatting
 set tabstop=2
