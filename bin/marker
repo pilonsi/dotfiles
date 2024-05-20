@@ -4,6 +4,14 @@
 
 set marker="%#"
 
+set sourced=($_)
+
+if ("$sourced" == "") then
+	echo "Script must be sourced, not run"
+	unset sourced
+	exit 1
+endif
+
 if ($#argv != 1) then
 	echo "Error: You must give exactly 1 arguments"
 	goto error
@@ -85,6 +93,7 @@ else
 	unsetenv MTMP_MARKER
 	unsetenv MTMP_PROMPT
 	unset code
+	unset sourced
 	unset marker
 
 	# At last we are done im going for a walk i desperately need
@@ -95,5 +104,6 @@ endif
 error:
 	echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none]"
 	echo " "
+	unset sourced
 	unset marker
 	exit 1
