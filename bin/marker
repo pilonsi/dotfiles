@@ -9,6 +9,7 @@ set sourced=($_)
 if ("$sourced" == "") then
 	echo "Script must be sourced, not run"
 	unset sourced
+	unset marker
 	exit 1
 endif
 
