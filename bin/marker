@@ -1,50 +1,99 @@
 #!/bin/csh
 # Change the prompt color marker to distinguish between terminals
+#
+
+set marker="%#"
 
 if ($#argv != 1) then
 	echo "Error: You must give exactly 1 arguments"
-	echo "Usage: marker [red | green | yellow | blue | magenta | cyan | none]"
-	echo " "
+	goto error
 else
 	switch ("$argv[1]")
 		case red :
-			set color="1;31m"
+			set code="1;31m"
 			breaksw
 		
 		case green :
-			set color="1;32m"
+			set code="1;32m"
 			breaksw
 
 		case yellow :
-			set color="1;33m"
+			set code="1;33m"
 			breaksw
 
 		case blue :
-			set color="1;34m"
+			set code="1;34m"
 			breaksw
 		
 		case magenta :
-			set color="1;35m"			
+			set code="1;35m"			
 			breaksw
 
 		case cyan :
-			set color="1;36m"
+			set code="1;36m"
 			breaksw
 		
 		case none :
-			set color="0;37m"			
+			set code="0;37m"			
 			breaksw
 
 		default :
 			echo "Error: Arguments not valid"
-			echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none]"
-			echo " "
-			exit
+			goto error
 
 	endsw
-  
-	set prompt="%~ %{\e[${color}%}%#%{\e[0m%} "
+
+	#
+	# After coding this hell I experienced the popular (and absolutely justified) hate for csh
+	# I spent too much time here, more than I care to admit and it was horrible
+	# But at least I got an excuse to use awk
+	#
+	
+	# First we have to export the prompt to an environment variable to access it from awk
+	# This is because doing someting like set x=`echo "[{"` will fail in csh
+	# I've lost hours here and I'm very tired and still confused as to why it doesn't work
+	setenv MTMP_PROMPT "$prompt"
+	setenv MTMP_MARKER "$marker"
+
+	# We set the colors with the hellish characters in nice variables
+	set color="%{\e[${code}%}"
+	set clear="%{\e[0m%}" 
+
+	# Dirty hack to process a string containing { and [ in a subshell without csh collapsing
+	# So far since im extremely sick of this the regexp will nuke everything between the 1st
+	# and last color codes. To be improved. For my current usecase it works.
+	# The result (for my current usecase) will be the prompt without color codes and with the
+	# marker chars in place
+	set cprompt=`echo 0 | awk '{target = ENVIRON["MTMP_PROMPT"]; sub(/%\{\\e.*%}/, ENVIRON["MTMP_MARKER"], target); print target}'`
+
+	# Now we separate the string in the substring before and after the marker characters,
+	# excluding them.
+	set pre=`echo "$cprompt" | awk '{gsub(/\%#(.*?)$/, ""); print}'`
+	set post=`echo "$cprompt" | awk '{gsub(/^(.*?)\%#/, ""); print}'`
+
+	# And we build the new prompt with the substrings and the new marker in the middle.
+	# Something is nuking the trailing whitespaces but too tired now to investigate
+	# I'm adding them in for now
+	set prompt="${pre} ${color}${marker}${clear}${post} "
+
+	# And since this is sourced we clean all the vars
+	unset post
+	unset pre
+	unset cprompt
+	unset clear
 	unset color
+	unsetenv MTMP_MARKER
+	unsetenv MTMP_PROMPT
+	unset code
+	unset marker
+
+	# At last we are done im going for a walk i desperately need
+	exit 0
 
 endif
 
+error:
+	echo "Usage: markers [red | green | yellow | blue | magenta | cyan | none]"
+	echo " "
+	unset marker
+	exit 1
