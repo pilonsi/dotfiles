@@ -44,9 +44,10 @@ wish to proceed? (y/n)\c"
   fi
 fi
 
-install_subdirs="common $2"
-
 cd $(dirname "$0")
+
+# Install dotfiles from common + selected system following directory structure
+install_subdirs="common $2"
 
 for subdir in $install_subdirs; do
   dir="./dotfiles/${subdir}"
@@ -69,13 +70,17 @@ for subdir in $install_subdirs; do
   done
 done
 
-if [ "$1" = "deploy" ]; then
-  runcmd "rm -r ${HOME}/bin/"
-  runcmd "cp -r bin/ ${HOME}/bin/"
-else
-  runcmd "rm -r bin/"
-  runcmd "cp -r ${HOME}/bin/ bin/"
-fi
+# Install other files from ./home to $HOME following directory structure
+install_subdirs="ls home/"
+
+for subdir in $install_subdirs; do
+	if [ "$1" = "deploy" ]; then
+	  runcmd "rm -r ${HOME}/${subdir}/"
+	  runcmd "cp -r home/${subdir}/ ${HOME}/${subdir}/"
+	else
+	  runcmd "rm -r home/${subdir}"
+	  runcmd "cp -r ${HOME}/${subdir}/ ${subdir}/"
+	fi
 
 printf "\nCompleted ${1} for ${2}\n"
 if [ $dry_run ]; then
