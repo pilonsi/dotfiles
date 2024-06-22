@@ -71,7 +71,7 @@ for subdir in $install_subdirs; do
 done
 
 # Install other files from ./home to $HOME following directory structure
-install_subdirs="ls home/"
+install_subdirs=$(ls home/)
 
 for subdir in $install_subdirs; do
 	if [ "$1" = "deploy" ]; then
@@ -81,6 +81,7 @@ for subdir in $install_subdirs; do
 	  runcmd "rm -r home/${subdir}"
 	  runcmd "cp -r ${HOME}/${subdir}/ ${subdir}/"
 	fi
+done
 
 printf "\nCompleted ${1} for ${2}\n"
 if [ $dry_run ]; then
