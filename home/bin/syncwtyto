@@ -1,0 +1,38 @@
+#!/bin/sh
+
+help_message () {
+  printf 'Sync local dirs with tyto\n\n'
+  printf 'Usage: syncwtyto [-m -s -t -o]\n'
+	printf '  -m: Sync music\n'
+	printf '  -s: Sync src\n'
+	printf '  -t: Sync text\n'
+	printf '  -o: Sync tools\n'
+}
+
+# Show help message if no arguments
+if [ $# -eq 0 ]; then
+	help_message
+	exit 1
+fi
+
+# Get positional arguments
+while :; do
+  case $1 in
+    -m)
+			rsync -atuPh --delete ~/Music/Biblioteca/ tyto.despatxet.local:/tank/pilonsi/audio/music/
+			rsync -atuPh --delete ~/Music/beets/ tyto.despatxet.local:/tank/pilonsi/audio/beets/
+      ;;
+    -s)
+			rsync -atuPh --delete ~/src/ tyto.despatxet.local:/tank/pilonsi/src/
+      ;;
+    -t)
+			rsync -atuPh --delete ~/text/ tyto.despatxet.local:/tank/pilonsi/text/
+      ;;
+    -o)
+			rsync -atuPh --delete ~/tools/ tyto.despatxet.local:/tank/pilonsi/tools/
+      ;;
+    *)
+      break
+  esac
+  shift
+done
