@@ -9,6 +9,8 @@ help_message () {
 	printf '  -o: Sync tools\n'
 }
 
+rsync_cmd="rsync -atuPhz --delete"
+
 # Show help message if no arguments
 if [ $# -eq 0 ]; then
 	help_message
@@ -19,17 +21,26 @@ fi
 while :; do
   case $1 in
     -m)
-			rsync -atuPh --delete ~/Music/Biblioteca/ tyto.despatxet.local:/tank/pilonsi/audio/music/
-			rsync -atuPh --delete ~/Music/beets/ tyto.despatxet.local:/tank/pilonsi/audio/beets/
+			$rsync_cmd ~/Music/Biblioteca/ tyto.despatxet.local:/tank/pilonsi/audio/music/
+			$rsync_cmd ~/Music/beets/ tyto.despatxet.local:/tank/pilonsi/audio/beets/
       ;;
     -s)
-			rsync -atuPh --delete ~/src/ tyto.despatxet.local:/tank/pilonsi/src/
+			$rsync_cmd ~/src/ tyto.despatxet.local:/tank/pilonsi/src/
       ;;
     -t)
-			rsync -atuPh --delete ~/text/ tyto.despatxet.local:/tank/pilonsi/text/
+			$rsync_cmd ~/text/ tyto.despatxet.local:/tank/pilonsi/text/
       ;;
     -o)
-			rsync -atuPh --delete ~/tools/ tyto.despatxet.local:/tank/pilonsi/tools/
+			$rsync_cmd ~/tools/ tyto.despatxet.local:/tank/pilonsi/tools/
+      ;;
+    -b)
+			$rsync_cmd ~/books/ tyto.despatxet.local:/tank/pilonsi/books/
+      ;;
+    -p)
+			$rsync_cmd ~/personal/ tyto.despatxet.local:/tank/pilonsi/personal/
+      ;;
+    -w)
+			$rsync_cmd ~/work/ tyto.despatxet.local:/tank/pilonsi/work/
       ;;
     *)
       break
