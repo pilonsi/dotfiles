@@ -7,6 +7,9 @@ help_message () {
 	printf '  -s: Sync src\n'
 	printf '  -t: Sync text\n'
 	printf '  -o: Sync tools\n'
+	printf '  -b: Sync books\n'
+	printf '  -p: Sync personal\n'
+	printf '  -w: Sync work\n'
 }
 
 rsync_cmd="rsync -atuPhz --delete"
