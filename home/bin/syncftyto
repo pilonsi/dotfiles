@@ -2,7 +2,7 @@
 
 help_message () {
   printf 'Sync local dirs with tyto\n\n'
-  printf 'Usage: syncwtyto [-m -s -t -o]\n'
+  printf 'Usage: syncftyto [-m -s -t -o]\n'
 	printf '  -m: Sync music\n'
 	printf '  -s: Sync src\n'
 	printf '  -t: Sync text\n'
@@ -25,26 +25,26 @@ fi
 while :; do
   case $1 in
     -m)
-			$rsync_cmd ~/Music/Biblioteca/ ${remote_host}:/tank/pilonsi/audio/music/
-			$rsync_cmd ~/Music/beets/ ${remote_host}:/tank/pilonsi/audio/beets/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/audio/music/ ~/Music/Biblioteca/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/audio/beets/ ~/Music/beets/
       ;;
     -s)
-			$rsync_cmd ~/src/ ${remote_host}:/tank/pilonsi/src/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/src/ ~/src/
       ;;
     -t)
-			$rsync_cmd ~/text/ ${remote_host}:/tank/pilonsi/text/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/text/ ~/text/
       ;;
     -o)
-			$rsync_cmd ~/tools/ ${remote_host}:/tank/pilonsi/tools/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/tools/ ~/tools/
       ;;
     -b)
-			$rsync_cmd ~/books/ ${remote_host}:/tank/pilonsi/books/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/books/ ~/books/
       ;;
     -p)
-			$rsync_cmd ~/personal/ ${remote_host}:/tank/pilonsi/personal/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/personal/ ~/personal/
       ;;
     -w)
-			$rsync_cmd ~/work/ ${remote_host}:/tank/pilonsi/work/
+			$rsync_cmd ${remote_host}:/tank/pilonsi/work/ ~/work/
       ;;
     *)
       break
