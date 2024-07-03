@@ -77,8 +77,8 @@ else
 
 	# Now we separate the string in the substring before and after the marker characters,
 	# excluding them.
-	set pre=`echo "$cprompt" | awk '{gsub(/\%#(.*?)$/, ""); print}'`
-	set post=`echo "$cprompt" | awk '{gsub(/^(.*?)\%#/, ""); print}'`
+	set pre=`echo "$cprompt" | awk '{gsub(/%#(.*?)$/, ""); print}'`
+	set post=`echo "$cprompt" | awk '{gsub(/^(.*?)%#/, ""); print}'`
 
 	# And we build the new prompt with the substrings and the new marker in the middle.
 	# Something is nuking the trailing whitespaces but too tired now to investigate
