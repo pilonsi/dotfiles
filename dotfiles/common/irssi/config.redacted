@@ -1,14 +1,13 @@
 servers = (
   {
-    address = "irc.libera.chat";
-    chatnet = "liberachat";
-    port = "6697";
-    use_tls = "yes";
+    chatnet = "tyto-libera";
+    port = "6667";
+    use_tls = "no";
     tls_verify = "yes";
+    autoconnect = "yes";
   },
   {
-    address = "irc.tyto.despatxet.local";
-    chatnet = "tyto-libera";
+    chatnet = "tyto-freenode";
     port = "6667";
     use_tls = "no";
     tls_verify = "yes";
@@ -17,18 +16,15 @@ servers = (
 );
 
 chatnets = {
-  liberachat = {
-    type = "IRC";
-    max_kicks = "1";
-    max_msgs = "4";
-    max_whois = "1";
-  };
   "tyto-libera" = { type = "IRC"; };
+  "tyto-freenode" = { type = "IRC"; };
 };
 
 channels = (
-  { name = "#libera"; chatnet = "liberachat"; autojoin = "No"; },
-  { name = "#irssi"; chatnet = "liberachat"; autojoin = "No"; }
+  { name = "#illumos"; chatnet = "tyto-freenode"; autojoin = "Yes"; }
+  { name = "#omnios"; chatnet = "tyto-freenode"; autojoin = "Yes"; }
+  { name = "#openindiana"; chatnet = "tyto-freenode"; autojoin = "Yes"; }
+  { name = "##re"; chatnet = "tyto-freenode"; autojoin = "Yes"; }
 );
 
 aliases = {
@@ -190,9 +186,9 @@ statusbar = {
 };
 settings = {
   core = {
-    real_name = "";
-    user_name = "pilonsi";
-    nick = "pilonsi";
+    real_name = ;
+    user_name = ;
+    nick = ;
   };
   "fe-common/core" = { theme = "pilonsi"; };
   "fe-text" = { show_server_time = "yes"; scroll_page_count = "1"; };
