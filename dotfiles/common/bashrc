@@ -7,4 +7,6 @@ alias la='ls -aF'
 alias lf='ls -FA'
 alias ll='ls -lAF'
 
-export PS1="\e[3m\w >\e[0m "
+export PS1="\[\e[3m\]\w >\[\e[0m\] "
+
+source ~/.bashrc.env
