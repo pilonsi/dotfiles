@@ -1,0 +1,10 @@
+[user]
+	name = Jorge Fabregat López
+	email = jfabregat@protonmail.com
+[sendmail]                                                                                                                 
+#  smtpServer = 127.0.0.1                                                                                                   
+#  smtpUser = jfabregat@protonmail.com                                                                                      
+#  smtpServerPort = 1025                                                                                                    
+#  smtpEncryption = ssl                                                                                                     
+#  smtpsslcertpath =                                                                                                        
+#  smtpPass = 
