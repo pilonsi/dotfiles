@@ -1,6 +1,7 @@
 #!/bin/sh
 
 rcfile=".pvimrc"
+rundir="$PWD"
 
 while [ ! -f "$rcfile" ] && [ "$PWD" != "/" ]; do
 	cd ..
@@ -11,5 +12,7 @@ if [ -f "$rcfile" ]; then
 else
 	vimcmd="vim"
 fi
+
+cd $rundir
 
 $vimcmd "$@"
