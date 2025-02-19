@@ -1,0 +1,15 @@
+#!/bin/sh
+
+rcfile=".pvimrc"
+
+while [ ! -f "$rcfile" ] && [ "$PWD" != "/" ]; do
+	cd ..
+done
+
+if [ -f "$rcfile" ]; then
+	vimcmd="vim -N -u ${PWD}/${rcfile}"
+else
+	vimcmd="vim"
+fi
+
+$vimcmd "$@"
