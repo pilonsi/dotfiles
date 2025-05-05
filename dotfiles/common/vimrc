@@ -4,9 +4,12 @@
 syntax on
 set background=dark
 set colorcolumn=80
+let g:pencil_terminal_italics = 0
+let g:pencil_higher_contrast_ui = 1
 colorscheme pencil
-hi CursorLine cterm=NONE ctermbg=8
-hi ColorColumn cterm=NONE ctermbg=8
+
+" gui vs cterm
+set notermguicolors
 
 " Formatting
 set tabstop=2
@@ -30,6 +33,12 @@ filetype plugin on
 set mouse=
 set ttymouse=
 
+" Disable annoying auto comment insertion
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " ADI Specific
 set t_BE=                      " Fixes issues with copy/paste
 set backspace=indent,eol,start " Fixes issue with delete/backspace
+
+" Load environment specific settings
+source ~/.vimrc.env
