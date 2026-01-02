@@ -24,7 +24,14 @@ gen_bkpdir_name() {
 }
 
 get_abs_path() {
-
+  if [ -d "$1" ]; then
+    (cd "$1" && pwd -P)
+  else
+    path=$(dirname "$1")
+    item=$(basename "$1")
+    abs_path=$(cd "$path" && pwd -P)
+    printf "${abs_path}/${item}"
+  fi
 }
 
 run_cmd() {
