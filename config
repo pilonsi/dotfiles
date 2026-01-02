@@ -1,9 +1,6 @@
 #!/bin/sh
 # Deploy dotfiles in a new system
 
-echo "Untested, will not run"
-exit 1
-
 set -e
 
 systems="macos linux illumos freebsd msys"
@@ -11,26 +8,22 @@ systems="macos linux illumos freebsd msys"
 parse_error() {
   printf "Usage: ${0} <system> [-d]\n" 
   printf "Where system must be one of the following:\n"
-  for system in $systems; do
-    printf "$system "
+  for l_pe_system in $systems; do
+    printf "$l_pe_system "
   done
   printf "\n\n"
   printf "  -d: Dry-run. Only lists changes to be made.\n"
   exit 1
 }
 
-gen_bkpdir_name() {
-  printf "${HOME}/.dotfilesbkp-$(date +%Y-%m-%d-%H:%M:%S)"
-}
-
 get_abs_path() {
   if [ -d "$1" ]; then
     (cd "$1" && pwd -P)
   else
-    path=$(dirname "$1")
-    item=$(basename "$1")
-    abs_path=$(cd "$path" && pwd -P)
-    printf "${abs_path}/${item}"
+    l_gp_dir=$(dirname "$1")
+    l_gp_file=$(basename "$1")
+    l_gp_abs_dir=$(cd "$l_gp_dir" && pwd -P)
+    printf "${l_gp_abs_dir}/${l_gp_file}"
   fi
 }
 
@@ -42,40 +35,40 @@ run_cmd() {
 }
 
 link_item() {
-  src="$1"
-  dst="$2"
-  bkp="$3"
-  dst_path=$(dirname "$dst")
+  l_li_src="$1"
+  l_li_dst="$2"
+  l_li_bkp="$3"
+  l_li_dst_path=$(dirname "$l_li_dst")
 
-  if [ ! -d "$dst_path" ]; then
-    run_cmd mkdir -p "$dst_path"
+  if [ ! -d "$l_li_dst_path" ]; then
+    run_cmd mkdir -p "$l_li_dst_path"
   fi  
 
-  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
-    backup_item "$dst" "$bkp"
+  if [ -e "$l_li_dst" ] && [ ! -L "$l_li_dst" ]; then
+    backup_item "$l_li_dst" "$l_li_bkp"
   fi
 
-  if [ -L "$dst" ]; then
-    run_cmd rm "$dst"
+  if [ -L "$l_li_dst" ]; then
+    run_cmd rm "$l_li_dst"
   fi
 
-  run_cmd ln -s "$src" "$dst"
+  run_cmd ln -s "$l_li_src" "$l_li_dst"
 }
 
 backup_item() {
-  src="$1"
-  dst_root="$2"
-  dst="${dst_root}/${src#$HOME/}"
-  dst_path=$(dirname "$dst")
+  l_bi_src="$1"
+  l_bi_dst_root="$2"
+  l_bi_dst="${l_bi_dst_root}/${l_bi_src#$HOME/}"
+  l_bi_dst_path=$(dirname "$l_bi_dst")
 
-  if [ ! -d "${dst_path}" ]; then
-    run_cmd mkdir -p "${dst_path}"
+  if [ ! -d "${l_bi_dst_path}" ]; then
+    run_cmd mkdir -p "${l_bi_dst_path}"
   fi
 
-  run_cmd mv "${src}" "${dst}"
+  run_cmd mv "$l_bi_src" "$l_bi_dst"
 }
 
-bkppath=$(gen_bkpdir_name)
+bkppath="${HOME}/.dotfilesbkp-$(date +%Y-%m-%d-%H:%M:%S)"
 
 if [ $# -lt 1 ]; then
   parse_error
@@ -110,6 +103,8 @@ install_subdirs="common $1"
 for subdir in $install_subdirs; do
   dir="./${subdir}/home"
   for relsrc in "${dir}"/*; do
+    [ -e "$relsrc" ] || continue
+
     src=$(get_abs_path "${relsrc}")
 
     item=$(basename "${src}")
