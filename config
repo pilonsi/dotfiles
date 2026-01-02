@@ -6,17 +6,27 @@ set -e
 systems="macos linux illumos freebsd msys"
 shared_dirs="bin .config"
 
-parse_error() {
+#############################################################################
+# help
+# 
+# Prints usage information and exits
+#############################################################################
+help() {
   printf "Usage: ${0} <system> [-d]\n" 
   printf "Where system must be one of the following:\n"
-  for l_pe_system in $systems; do
-    printf "$l_pe_system "
+  for l_he_system in $systems; do
+    printf "$l_he_system "
   done
   printf "\n\n"
   printf "  -d: Dry-run. Only lists changes to be made.\n"
   exit 1
 }
 
+#############################################################################
+# get_abs_path <path>
+# 
+# Returns the absolute path of the file or directory passed as an argument
+#############################################################################
 get_abs_path() {
   if [ -d "$1" ]; then
     (cd "$1" && pwd -P)
@@ -28,6 +38,12 @@ get_abs_path() {
   fi
 }
 
+#############################################################################
+# run_cmd <command> ...
+# 
+# Prints the passed arguments and if $dry_run is not set, executes them as
+# well
+#############################################################################
 run_cmd() {
   echo "$@"
   if ! [ $dry_run ]; then
@@ -35,6 +51,12 @@ run_cmd() {
   fi
 }
 
+#############################################################################
+# link_item <src> <dst> <bkp>
+# 
+# Creates a symbolic link to $src in $dst. If $dst exists it is moved to a
+# backup directory in $bkp, preserving the original directory hierarchy.
+#############################################################################
 link_item() {
   l_li_src="$1"
   l_li_dst="$2"
@@ -56,6 +78,12 @@ link_item() {
   run_cmd ln -s "$l_li_src" "$l_li_dst"
 }
 
+#############################################################################
+# backup_item <src> <dst>
+# 
+# Moves $src into the backup directory $dst. This function extracts the path
+# to $src starting from $HOME and replicates it in $dst.
+#############################################################################
 backup_item() {
   l_bi_src="$1"
   l_bi_dst_root="$2"
@@ -69,6 +97,18 @@ backup_item() {
   run_cmd mv "$l_bi_src" "$l_bi_dst"
 }
 
+#############################################################################
+# process_directory <src> <dst>
+# 
+# Loops through the contents of $src and links each to $HOME/$dst. If any
+# shared directory is found it calls itself recursively again to process it.
+#
+# The first time the function is called $dst should be empty because the
+# source files are stored referencing $HOME as the root directory.
+# When the function calls itself recursively it appends the destination
+# directory inside $HOME being processed to $dst to reproduce the file
+# hierarchy correctly.
+#############################################################################
 process_directory() {
   for l_pd_rel_src in "$1"/*; do
     [ -e "$l_pd_rel_src" ] || continue
@@ -90,16 +130,19 @@ process_directory() {
   done
 }
 
-bkppath="${HOME}/.dotfilesbkp-$(date +%Y-%m-%d-%H:%M:%S)"
+#############################################################################
+# Main logic
+#############################################################################
+bkppath="${HOME}/.dotfiles.old-$(date +%Y-%m-%d-%H:%M:%S)"
 
 if [ $# -lt 1 ]; then
-  parse_error
+  help
 elif ! echo "$systems" | grep -qw "$1"; then
-  parse_error
+  help
 fi
 
 if [ "$2" = "-d" ]; then
-  dry_run=true
+  dry_run="true"
 fi
 
 if ! [ $dry_run ]; then
@@ -118,6 +161,8 @@ be backed up to %s\n\nDo you wish to continue? (Y/n)" "${bkppath}"
   esac
 fi
 
+# The script expects to be run from where it is originally located in the 
+# repository. i.e in the same level as the dotfile source directories.
 cd $(dirname "$0")
 
 install_dirs="common $1"
@@ -128,6 +173,6 @@ for dir in $install_dirs; do
 done
 
 printf "\nCompleted configuration for %s\n" "${1}"
-if [ $dry_run ]; then
+if [ "$dry_run" = "true" ]; then
   printf "The -d option was used, so no changes have been made to the filesystem\n"
 fi

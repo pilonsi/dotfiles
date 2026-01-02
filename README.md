@@ -3,18 +3,17 @@
 These are the configuration files for my different environments.
 
 ## `config` script
-The `config` script automatically copies over or grabs the configuration files for a selected system.
+The `config` script creates symbolic links from the source directories to the correct
+location for the files in the home directory. It will back up any dotfiles it replaces
+to `$HOME/.dotfiles.old-$(date)`
 
-Files under `common` are installed for all systems together with environment specific files stored in each
-environment's folder.
-
-`bin` is also copied whole to `$HOME/bin`
+Files under `common` are installed for all systems together with environment specific
+files stored in each environment's folder.
 
 ```
-Usage: ./config deploy | acquire <system> [-d]
+Usage: ./config <system> [-d]
 Where system must be one of the following:
-macos debian illumos freebsd msys 
+macos linux illumos freebsd msys 
 
   -d: Dry-run. Only lists changes to be made.
 ```
-
