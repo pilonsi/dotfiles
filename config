@@ -109,7 +109,7 @@ install_subdirs="common $1"
 
 for subdir in $install_subdirs; do
   dir="./${subdir}/home"
-  for relsrc in "${dir}/*"; do
+  for relsrc in "${dir}"/*; do
     src=$(get_abs_path "${relsrc}")
 
     item=$(basename "${src}")
