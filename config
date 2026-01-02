@@ -1,10 +1,15 @@
 #!/bin/sh
 # Deploy dotfiles in a new system
 
+echo "Untested, will not run"
+exit 1
+
+set -e
+
 systems="macos linux illumos freebsd msys"
 
 parse_error() {
-  printf "Usage: ${0} deploy | acquire <system> [-d]\n" 
+  printf "Usage: ${0} <system> [-d]\n" 
   printf "Where system must be one of the following:\n"
   for system in $systems; do
     printf "$system "
@@ -14,77 +19,103 @@ parse_error() {
   exit 1
 }
 
-runcmd() {
-  echo "$1"
+gen_bkpdir_name() {
+  printf "${HOME}/.dotfilesbkp-$(date +%Y-%m-%d-%H:%M:%S)"
+}
+
+get_abs_path() {
+
+}
+
+run_cmd() {
+  echo "$@"
   if ! [ $dry_run ]; then
-    eval "$1"
+    "$@"
   fi
 }
 
-if [ $# -lt 2 ]; then
+link_item() {
+  src="$1"
+  dst="$2"
+  bkp="$3"
+  dst_path=$(dirname "$dst")
+
+  if [ ! -d "$dst_path" ]; then
+    run_cmd mkdir -p "$dst_path"
+  fi  
+
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    backup_item "$dst" "$bkp"
+  fi
+
+  if [ -L "$dst" ]; then
+    run_cmd rm "$dst"
+  fi
+
+  run_cmd ln -s "$src" "$dst"
+}
+
+backup_item() {
+  src="$1"
+  dst_root="$2"
+  dst="${dst_root}/${src#$HOME/}"
+  dst_path=$(dirname "$dst")
+
+  if [ ! -d "${dst_path}" ]; then
+    run_cmd mkdir -p "${dst_path}"
+  fi
+
+  run_cmd mv "${src}" "${dst}"
+}
+
+bkppath=$(gen_bkpdir_name)
+
+if [ $# -lt 1 ]; then
   parse_error
-elif ! echo "deploy acquire" | grep -qw "$1"; then
-  parse_error
-elif ! echo "$systems" | grep -qw "$2"; then
+elif ! echo "$systems" | grep -qw "$1"; then
   parse_error
 fi
 
-if [ "$3" = "-d" ]; then
+if [ "$2" = "-d" ]; then
   dry_run=true
 fi
 
 if ! [ $dry_run ]; then
-  printf "This script will ${1} all files for ${2} and will overwrite any \
-files in the destination folders. This action is irreversible\nDo you \
-wish to proceed? (y/n)\c"
+  printf "This script will link the dotfiles in this repository to your home \
+directory, replacing your current configuration. Files that are replaced will \
+be backed up to %s\n\nDo you wish to continue? (Y/n)" "${bkppath}"
+
   read proceed
-  if [ "$proceed" != "Y" ] && [ "$proceed" != "y" ]; then
-    printf "Aborting\n"
-    exit 0
-  fi
+  case "$proceed" in
+    [Yy]*)
+      ;;
+    *)
+      printf "Aborting\n"
+      exit 0
+      ;;
+  esac
 fi
 
 cd $(dirname "$0")
 
-# Install dotfiles from common + selected system following directory structure
-install_subdirs="common $2"
+install_subdirs="common $1"
 
 for subdir in $install_subdirs; do
-  dir="./dotfiles/${subdir}"
-  ls -1 $dir | while read -r item; do
-    if [ "$1" = "deploy" ]; then
-      if [ -d "${dir}/${item}" ]; then
-        runcmd "rm -r ${HOME}/.${item}/"
-        runcmd "cp -r ${dir}/${item}/ ${HOME}/.${item}/"
-      else
-        runcmd "cp ${dir}/${item} ${HOME}/.${item}"
-      fi
-    else
-      if [ -d "${HOME}/.${item}" ]; then
-        runcmd "rm -r ${dir}/${item}/"
-        runcmd "cp -r ${HOME}/.${item}/ ${dir}/${item}/"
-      else
-        runcmd "cp ${HOME}/.${item} ${dir}/${item}"
-      fi
+  dir="./${subdir}/home"
+  for relsrc in "${dir}/*"; do
+    src=$(get_abs_path "${relsrc}")
+
+    item=$(basename "${src}")
+    if [ "${item}" != "${item#_}" ]; then
+      item=".${item#_}"
     fi
+    dst="${HOME}/${item}"
+
+    link_item "${src}" "${dst}" "${bkppath}"
   done
 done
 
-# Install other files from ./home to $HOME following directory structure
-install_subdirs=$(ls home/)
-
-for subdir in $install_subdirs; do
-	if [ "$1" = "deploy" ]; then
-	  runcmd "rm -r ${HOME}/${subdir}/"
-	  runcmd "cp -r home/${subdir}/ ${HOME}/${subdir}/"
-	else
-	  runcmd "rm -r home/${subdir}"
-	  runcmd "cp -r ${HOME}/${subdir}/ ${subdir}/"
-	fi
-done
-
-printf "\nCompleted ${1} for ${2}\n"
+printf "\nCompleted configuration for %s\n" "${1}"
 if [ $dry_run ]; then
   printf "The -d option was used, so no changes have been made to the filesystem\n"
 fi
-
