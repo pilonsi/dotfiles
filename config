@@ -4,6 +4,7 @@
 set -e
 
 systems="macos linux illumos freebsd msys"
+shared_dirs="bin .config"
 
 parse_error() {
   printf "Usage: ${0} <system> [-d]\n" 
@@ -68,6 +69,27 @@ backup_item() {
   run_cmd mv "$l_bi_src" "$l_bi_dst"
 }
 
+process_directory() {
+  for l_pd_rel_src in "$1"/*; do
+    [ -e "$l_pd_rel_src" ] || continue
+
+    l_pd_item=$(basename "${l_pd_rel_src}")
+    if [ "${l_pd_item}" != "${l_pd_item#_}" ]; then
+      l_pd_item=".${l_pd_item#_}"
+    fi
+
+    if echo "$shared_dirs" | grep -qw "$l_pd_item"; then
+      process_directory "${l_pd_rel_src}" "${2}${l_pd_item}/"
+      continue
+    fi
+
+    l_pd_src=$(get_abs_path "${l_pd_rel_src}")
+    l_pd_dst="${HOME}/${2}${l_pd_item}"
+
+    link_item "${l_pd_src}" "${l_pd_dst}" "${bkppath}"
+  done
+}
+
 bkppath="${HOME}/.dotfilesbkp-$(date +%Y-%m-%d-%H:%M:%S)"
 
 if [ $# -lt 1 ]; then
@@ -98,23 +120,11 @@ fi
 
 cd $(dirname "$0")
 
-install_subdirs="common $1"
+install_dirs="common $1"
 
-for subdir in $install_subdirs; do
-  dir="./${subdir}/home"
-  for relsrc in "${dir}"/*; do
-    [ -e "$relsrc" ] || continue
-
-    src=$(get_abs_path "${relsrc}")
-
-    item=$(basename "${src}")
-    if [ "${item}" != "${item#_}" ]; then
-      item=".${item#_}"
-    fi
-    dst="${HOME}/${item}"
-
-    link_item "${src}" "${dst}" "${bkppath}"
-  done
+for dir in $install_dirs; do
+  root="./${dir}/home"
+  process_directory "$root" ""
 done
 
 printf "\nCompleted configuration for %s\n" "${1}"
