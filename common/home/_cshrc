@@ -15,7 +15,7 @@ alias hg  'history | grep'
 alias j		'jobs -l'
 alias la	'ls -aF'
 alias lf	'ls -FA'
-alias ll	'ls -lAF'
+alias ll	'ls -lhAF'
 
 # Marker command
 alias marker 'source ~/bin/marker'

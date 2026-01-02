@@ -4,7 +4,7 @@
 set -e
 
 systems="macos linux illumos freebsd msys"
-shared_dirs="bin .config"
+shared_dirs="bin .config .ssh"
 
 #############################################################################
 # help
