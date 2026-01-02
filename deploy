@@ -39,6 +39,20 @@ get_abs_path() {
 }
 
 #############################################################################
+# is_in_list <item> <list>
+# 
+# Returns 0 if $item is in the space separated $list
+#############################################################################
+is_in_list() {
+  for l_il_memb in $2; do
+    if [ "$1" = "$l_il_memb" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+#############################################################################
 # run_cmd <command> ...
 # 
 # Prints the passed arguments and if $dry_run is not set, executes them as
@@ -118,7 +132,7 @@ process_directory() {
       l_pd_item=".${l_pd_item#_}"
     fi
 
-    if echo "$shared_dirs" | grep -qw "$l_pd_item"; then
+    if is_in_list "$l_pd_item" "$shared_dirs"; then
       process_directory "${l_pd_rel_src}" "${2}${l_pd_item}/"
       continue
     fi
@@ -137,7 +151,7 @@ bkppath="${HOME}/.dotfiles.old-$(date +%Y-%m-%d-%H:%M:%S)"
 
 if [ $# -lt 1 ]; then
   help
-elif ! echo "$systems" | grep -qw "$1"; then
+elif ! is_in_list "$1" "$systems"; then
   help
 fi
 
