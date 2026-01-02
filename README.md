@@ -15,7 +15,7 @@ include:
  - `beets`
 
 ## `deploy` script
-The `config` script creates symbolic links from the source directories to the correct
+The `deploy` script creates symbolic links from the source directories to the correct
 location for the files in the home directory. It will back up any dotfiles it replaces
 to `$HOME/.dotfiles.old-$(date)`
 
